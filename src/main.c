@@ -1,9 +1,14 @@
-__asm__(".code32");
-
 #include <real/video.h>
+
+#include <idt.h>
+#include <pic.h>
 
 __attribute__((optimize("O3")))
 void pmain() {
+    idt_init();
+    pic_remap();
+    asm volatile("sti");
+
     uint8_t b = 0;
     while (1) {
         for (int y = 0; y < vbe_mode_info.height; y++) {

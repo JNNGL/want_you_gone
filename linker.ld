@@ -5,6 +5,11 @@ phys = 0x7c00;
 SECTIONS {
     . = 0x7c00;
 
+    .boot : {
+        code = .;
+        *(.boot)
+    }
+
     .text : {
         code = .;
         *(.text)

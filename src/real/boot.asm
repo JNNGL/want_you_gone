@@ -2,7 +2,7 @@ bits 16
 
 %include "build/constants.asm"
 
-section .text
+section .boot
 
 bpb:
     jmp stage1_entry
