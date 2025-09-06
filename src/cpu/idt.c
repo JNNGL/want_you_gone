@@ -1,6 +1,6 @@
 #include "idt.h"
 
-#include <irq.h>
+#include <cpu/irq.h>
 
 static uint8_t vectors[256];
 extern void* isr_stub_table[];

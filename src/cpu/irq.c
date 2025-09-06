@@ -1,7 +1,7 @@
 #include "irq.h"
 
 #include <real/video.h>
-#include <pic.h>
+#include <cpu/pic.h>
 
 irq_handler_t irq_handlers[256];
 

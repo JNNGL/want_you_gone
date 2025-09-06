@@ -17,7 +17,25 @@ for dir in $(find src/* -type d | sed 's|^src/||'); do
   mkdir -p "build/$dir"
 done
 
-printf "%%define bootloader_size 524288 ; (not actual size)\n" > build/constants.asm
+touch build/data.bin
+
+resource_files=$(find resources -type f | sed 's|^resources/||')
+for file in $resource_files; do
+  printf "%s" "$file" >> build/data.bin
+  printf '\x00' >> build/data.bin
+  file_size=$(wc -c < "resources/$file")
+  printf "0: %.8x" "$file_size" | sed -E 's/0: (..)(..)(..)(..)/0: \4\3\2\1/' | xxd -r -g0 >> build/data.bin
+  cat "resources/$file" >> build/data.bin
+done
+
+printf "%s\x00" "DATAEND" >> build/data.bin
+
+data_size=$(wc -c < build/data.bin)
+
+printf "global data_file_size\ndata_file_size: dd %s\n" "$data_size" > build/constants.asm
+printf "global boot_file_size\nboot_file_size: dd 524288 ; (not actual size)\n" >> build/constants.asm
+printf "%%define bootloader_size 524288\n" >> build/constants.asm
+
 for file in $C_FILES; do
   i686-elf-gcc $C_FLAGS "src/$file" -o "build/$file.o"
   objects="build/$file.o $objects"
@@ -32,7 +50,9 @@ i686-elf-gcc $LD_FLAGS $objects -o build/boot.bin
 
 bootloader_size=$(wc -c < build/boot.bin)
 
-printf "%%define bootloader_size %s\n" "$bootloader_size" > build/constants.asm
+printf "global data_file_size\ndata_file_size: dd %s\n" "$data_size" > build/constants.asm
+printf "global boot_file_size\nboot_file_size: dd %s\n" "$bootloader_size" >> build/constants.asm
+printf "%%define bootloader_size %s\n" "$bootloader_size" >> build/constants.asm
 
 for file in $ASM_FILES; do
   nasm $ASM_FLAGS "src/$file" -o "build/$file.o"
@@ -51,3 +71,5 @@ fi
 if [ "$bootloader_size" -ne "$padded_size" ]; then
   truncate -s $padded_size build/boot.bin
 fi
+
+cat build/data.bin >> build/boot.bin

@@ -1,6 +1,6 @@
 #include "pic.h"
 
-#include <io.h>
+#include <cpu/io.h>
 
 void pic_send_eoi(uint8_t irq) {
     if (irq >= 8) {

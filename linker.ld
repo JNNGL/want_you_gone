@@ -5,6 +5,8 @@ phys = 0x7c00;
 SECTIONS {
     . = 0x7c00;
 
+    code_start = .;
+
     .boot : {
         code = .;
         *(.boot)
@@ -32,6 +34,8 @@ SECTIONS {
         *(.stack)
         PROVIDE(_bss_end = .);
     }
+
+    code_end = .;
 
     /DISCARD/ : {
         *(.comment)

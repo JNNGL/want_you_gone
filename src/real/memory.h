@@ -14,3 +14,5 @@ void print_memory_map();
 
 extern struct memory_map_entry* memory_map;
 extern uint32_t* memory_map_length;
+
+extern void* free_memory_ptr;

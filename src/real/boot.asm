@@ -1,7 +1,5 @@
 bits 16
 
-%include "build/constants.asm"
-
 section .boot
 
 bpb:
@@ -27,6 +25,8 @@ bpb:
     .bpb_volume_label:      db 'NONE       '
     .bpb_filesystem_type:   times 8 db 0
 
+%include "build/constants.asm"
+
 stage1_entry:
     jmp 0x00:setup
 setup:
@@ -39,7 +39,7 @@ setup:
     mov sp, 0x7C00
     cld
 
-    mov [disk], dl
+    mov [bios_disk], dl
 
     mov eax, 1
     mov bx, stage2
@@ -88,7 +88,7 @@ read_disk16:
     mov [dap_num_sectors], cx
     mov [dap_buf_segment], dx
     mov [dap_buf_offset], bx
-    mov dl, [disk]
+    mov dl, [bios_disk]
     mov si, dap
     mov ah, 0x42
     int 0x13
@@ -102,7 +102,8 @@ read_disk16:
     jmp .loop
 disk_read_error:    db 'Error reading disk.', 0
 
-disk:   db 0x80
+global bios_disk
+bios_disk:   db 0x80
 
 global dap
 global dap_num_sectors
@@ -354,3 +355,9 @@ bits 32
     mov gs, ax
     mov ss, ax
     call pmain
+
+align 512
+
+global disk_buffer
+disk_buffer:
+    times 512 db 0
