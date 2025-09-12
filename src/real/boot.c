@@ -8,12 +8,12 @@ __asm__(".code16gcc");
 #include <stdint.h>
 #include <stddef.h>
 
-static void* memcpy(void* dst, const void* src, size_t n) {
-    for (size_t i = 0; i < n; i++) {
-        ((uint8_t*) dst)[i] = ((const uint8_t*) src)[i];
-    }
-
-    return dst;
+__attribute__((optimize("O3")))
+static void memcpy(void* dest, void* src, uint32_t count) {
+    if (!count) return;
+    while (count >= 4) { *(uint32_t*) dest = *(uint32_t*) src; dest += 4; src += 4; count -= 4; }
+    while (count >= 2) { *(uint16_t*) dest = *(uint16_t*) src; dest += 2; src += 2; count -= 2; }
+    while (count >= 1) { *(uint8_t*) dest = *(uint8_t*) src; dest += 1; src += 1; count -= 1; }
 }
 
 __attribute__((regparm(2)))
@@ -51,6 +51,8 @@ _Noreturn
 void boot_main() {
     detect_memory();
     print_memory_map();
+
+    puts16("Loading data from disk...");
 
     data_file_ptr = free_memory_ptr;
 

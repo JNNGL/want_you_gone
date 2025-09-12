@@ -103,7 +103,7 @@ read_disk16:
 disk_read_error:    db 'Error reading disk.', 0
 
 global bios_disk
-bios_disk:   db 0x80
+bios_disk:   db 0
 
 global dap
 global dap_num_sectors

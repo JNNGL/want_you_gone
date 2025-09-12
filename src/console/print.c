@@ -58,13 +58,13 @@ void putc(char ch) {
     }
 }
 
-void fputs(const char* str) {
+void kputs(const char* str) {
     while (*str != 0) {
         putc(*str++);
     }
 }
 
 void puts(const char* str) {
-    fputs(str);
+    kputs(str);
     putc('\n');
 }

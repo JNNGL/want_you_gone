@@ -79,12 +79,14 @@ void detect_memory() {
 }
 
 void print_memory_map() {
+    puts16("Memory map: ");
+
     for (uint32_t i = 0; i < *memory_map_length; i++) {
-        fputs16("0x");
+        kputs16("0x");
         print64h16(memory_map[i].base);
-        fputs16(" - 0x");
+        kputs16(" - 0x");
         print64h16(memory_map[i].base + memory_map[i].length);
-        fputs16(" | ");
+        kputs16(" | ");
         putc16("0123456789"[memory_map[i].type]);
         putc16(' ');
         putc16((memory_map[i].attributes & 1) ? '1' : '0');

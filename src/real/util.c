@@ -6,15 +6,15 @@ void putc16(char ch) {
     asm volatile("int $0x10" : : "a"(0x0E00 | ch));
 }
 
-void fputs16(const char *str) {
+void kputs16(const char *str) {
     while (*str != 0) {
         putc16(*str++);
     }
 }
 
 void puts16(const char* str) {
-    fputs16(str);
-    fputs16("\n\r");
+    kputs16(str);
+    kputs16("\n\r");
 }
 
 void print64h16(uint64_t x) {
