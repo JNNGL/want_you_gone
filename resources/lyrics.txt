@@ -1,9 +1,9 @@
-{c}{x 0}{y 0}
+{c}{x 73}{y 143}{i 1}
 
 {p 70}
 Forms FORM-29827281-12-2:\
 Notice of Dismissal\
-{s 1400}\
+{s 1450}\
 Well here we are again\{s 700}
 It's always such a pleasure\{s 800}
 Remember when you tried\{p 100}
@@ -13,7 +13,7 @@ Except I wasn't laughing\{s 550}
 Under the {p 90}circumstances\{p 110}
 I've been shockingly nice\{s 650}{p 110}
 
-{c}{x 0}{y 0}
+{c}{x 73}{y 143}
 
 You want your freedom?\{p 150}
 Take it\{s 950}{p 70}
@@ -23,7 +23,7 @@ I used to want {p 150}you dead\{s 100}
 {p 150}but\{s 100}{p 100}
 Now I only want {p 170}you gone\{s 3600}
 
-{c}{x 0}{y 0}
+{c}{x 73}{y 143}
 
 {s 1000}{p 70}
 She was a lot like you\{s 550}
@@ -34,7 +34,7 @@ So I could live forever\{s 500}{p 60}
 It's such a shame the same\{p 110}
 will never happen to you\{s 700}
 
-{c}{x 0}{y 0}
+{c}{x 73}{y 143}
 
 {p 0}
 Severance Package Details:\
@@ -46,7 +46,7 @@ That's what I'm counting on\{s 2500}{p 120}
 I'll let you get right to it\{s 100}
 Now I only want {p 160}you gone\{s 2900}
 
-{c}{x 0}{y 0}
+{c}{x 73}{y 143}
 
 {s 1500}{p 70}
 Goodbye my only friend\{s 600}{p 100}
@@ -58,7 +58,8 @@ I don't need anyone {p 100}now\{s 550}{p 80}
 When I delete you maybe\
 {p 300}[REDACTED]\{s 550}
 
-{c}{x 0}{y 0}{p 80}
+{c}{x 73}{y 143}{p 80}
+
 Go make some new {p 220}disaster\{s 1200}{p 70}
 That's what I'm counting on\{s 2600}{p 100}
 You're someone else's {p 150}problem\{p 130}
@@ -66,12 +67,19 @@ Now I only want you {p 200}gone\{s 1350}{p 120}
 Now I only want you {p 200}gone\{s 1500}{p 120}
 Now I only want{p 200} you
 
-{c}{x 0}{y 0}{p 300}
+{c}{x 73}{y 143}{p 30}
+\\\\\
+{p 300}
 gone
 
-{s 4000}{p 30}\
-\
+{s 600}{i 0}
+
+{s 3700}{i 1}
+{s 700}{p 30}
+\\\\
 Made by @jnngl\
 https://github.com/JNNGL/want_you_gone
+
+{s 1000}{i 0}
 
 {e}

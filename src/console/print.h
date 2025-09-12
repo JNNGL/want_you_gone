@@ -11,3 +11,6 @@ void puts(const char* str);
 void clear_console();
 void console_set_x(uint32_t x);
 void console_set_y(uint32_t y);
+
+void console_disable();
+void console_enable();

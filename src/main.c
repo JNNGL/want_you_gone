@@ -8,6 +8,9 @@
 #include <cpu/idt.h>
 #include <cpu/irq.h>
 #include <cpu/pic.h>
+
+#include <graphics/background.h>
+#include <graphics/font.h>
 #include <executor.h>
 
 #define PIT_FREQUENCY 100
@@ -19,9 +22,10 @@ static uint8_t refilling_sound_buffer = 0;
 static uint32_t write_position = 0;
 static uint32_t read_position = 0;
 static uint8_t pending_playback = 0;
+static uint8_t cursor_blink = 0;
 
 void refill_sound_buffer() {
-    if (current_time++ < 10) {
+    if (current_time < 10) {
         return;
     }
 
@@ -58,6 +62,20 @@ void pit_handler() {
     }
 
     tick_executors();
+    tick_clear();
+
+    if (cursor_blink && !(current_time % 30)) {
+        toggle_cursor_state();
+    }
+
+    current_time++;
+}
+
+void set_blink_state(uint8_t state) {
+    cursor_blink = state;
+    if (!state) {
+        set_cursor_state(0);
+    }
 }
 
 __attribute__((noreturn, optimize("O3")))
@@ -85,18 +103,24 @@ void pmain() {
     memcpy(hda_data_buffer, sound_file.data, hda_buffer_size);
     asm volatile("wbinvd");
 
-    executor_cb.putchar = putc;
-    executor_cb.clear = clear_console;
-    executor_cb.set_x = console_set_x;
-    executor_cb.set_y = console_set_y;
-
-    add_executor(find_file("lyrics.txt").data);
-
     read_position = hda_buffer_size;
     refilling_sound_buffer = 1;
     pending_playback = 1;
 
-    clear_console();
+    console_disable();
+
+    init_font(find_file("consolas36.raw").data);
+
+    render_background();
+    copy_background();
+
+    executor_cb.putchar = draw_char;
+    executor_cb.clear = clear_text;
+    executor_cb.set_x = set_text_x;
+    executor_cb.set_y = set_text_y;
+    executor_cb.blink = set_blink_state;
+
+    add_executor(find_file("lyrics.txt").data);
 
     irq_set_handler(0, pit_handler);
 

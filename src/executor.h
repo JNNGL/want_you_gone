@@ -7,6 +7,7 @@ struct executor_callbacks {
     void(*clear)();
     void(*set_x)(uint32_t);
     void(*set_y)(uint32_t);
+    void(*blink)(uint8_t);
 };
 
 extern struct executor_callbacks executor_cb;

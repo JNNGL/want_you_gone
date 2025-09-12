@@ -46,7 +46,7 @@ void enter_video_mode() {
 
         int resolution = vbe_mode_info.width * vbe_mode_info.height;
         if (resolution > 1280 * 720) {
-            continue;
+//            continue;
         }
 
         if (resolution > best_resolution) {

@@ -1,6 +1,5 @@
 #include "executor.h"
 
-#include <cpu/io.h>
 #include <util/lib.h>
 
 struct executor_callbacks executor_cb;
@@ -12,6 +11,7 @@ typedef struct {
     uint32_t index;
     uint32_t period;
     uint32_t prev_char;
+    int cleared;
 } executor_t;
 
 static uint32_t current_time = 0;
@@ -27,6 +27,7 @@ void add_executor(char* buffer) {
     executor_t* executor = &executors[executor_count++];
     executor->buffer = buffer;
     executor->index = 0;
+    executor->cleared = 0;
     executor->active = 1;
 }
 
@@ -59,32 +60,51 @@ static void execute_instruction(executor_t* executor) {
 
     char command = fetch_char(executor);
     switch (command) {
-        case 'e':
+        case 'e': {
             executor->active = 0;
             return;
+        }
 
-        case 's':
-            executor->sleep = current_time + parse_uint(executor);
+        case 's': {
+            uint32_t time = parse_uint(executor);
+            while (executor->cleared && time > 20) {
+                executor->cleared--;
+                time -= 20;
+            }
+            executor->sleep = current_time + time;
             break;
+        }
 
-        case 'p':
+        case 'p': {
             executor->period = parse_uint(executor);
             break;
+        }
 
-        case 'c':
+        case 'c': {
             executor_cb.clear();
+            executor->sleep = current_time + 20;
+            executor->cleared++;
             break;
+        }
 
-        case 'x':
+        case 'x': {
             executor_cb.set_x(parse_uint(executor));
             break;
+        }
 
-        case 'y':
+        case 'y': {
             executor_cb.set_y(parse_uint(executor));
             break;
+        }
 
-        default:
+        case 'i': {
+            executor_cb.blink(parse_uint(executor));
             break;
+        }
+
+        default: {
+            break;
+        }
     }
 
     while (fetch_char(executor) != '}');
@@ -95,7 +115,11 @@ void tick_executor(executor_t* executor) {
         return;
     }
 
-    while (current_time >= executor->prev_char + executor->period) {
+    while ((int) current_time >= (int) (executor->prev_char + executor->period) - 20 * executor->cleared) {
+        if (executor->cleared) {
+            executor->cleared--;
+        }
+
         while (executor->active && peek_char(executor) == '{') {
             execute_instruction(executor);
             if (executor->sleep > current_time) {

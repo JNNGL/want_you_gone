@@ -21,6 +21,8 @@ static struct {
     int y1;
 } dirty_rect;
 
+static uint8_t enabled = 0;
+
 void init_console(void* font) {
     load_font(font);
     text_position.x = 0;
@@ -29,6 +31,7 @@ void init_console(void* font) {
     dirty_rect.y0 = 0;
     dirty_rect.x1 = 0;
     dirty_rect.y1 = 0;
+    enabled = 1;
 }
 
 void load_font(void* ptr) {
@@ -42,6 +45,10 @@ static uint8_t* get_glyph_pointer(char ch) {
 
 __attribute__((optimize("O3")))
 void putc(char ch) {
+    if (!enabled) {
+        return;
+    }
+
     if (ch == '\n') {
         text_position.y += console_font.header.char_size;
         if (text_position.y >= vbe_mode_info.height) {
@@ -84,18 +91,30 @@ void putc(char ch) {
 }
 
 void kputs(const char* str) {
+    if (!enabled) {
+        return;
+    }
+
     while (*str != 0) {
         putc(*str++);
     }
 }
 
 void puts(const char* str) {
+    if (!enabled) {
+        return;
+    }
+
     kputs(str);
     putc('\n');
 }
 
 __attribute__((optimize("O3")))
 void clear_console() {
+    if (!enabled) {
+        return;
+    }
+
     if (dirty_rect.x0 == dirty_rect.x1 || dirty_rect.y0 == dirty_rect.y1) {
         return;
     }
@@ -111,4 +130,12 @@ void console_set_x(uint32_t x) {
 
 void console_set_y(uint32_t y) {
     text_position.y = y;
+}
+
+void console_disable() {
+    enabled = 0;
+}
+
+void console_enable() {
+    enabled = 1;
 }
