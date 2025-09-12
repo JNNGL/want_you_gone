@@ -8,6 +8,7 @@
 #include <cpu/idt.h>
 #include <cpu/irq.h>
 #include <cpu/pic.h>
+#include <executor.h>
 
 #define PIT_FREQUENCY 100
 
@@ -17,6 +18,7 @@ static uint32_t current_time = 0;
 static uint8_t refilling_sound_buffer = 0;
 static uint32_t write_position = 0;
 static uint32_t read_position = 0;
+static uint8_t pending_playback = 0;
 
 void refill_sound_buffer() {
     if (current_time++ < 10) {
@@ -45,9 +47,17 @@ void refill_sound_buffer() {
 }
 
 void pit_handler() {
+    if (pending_playback) {
+        pending_playback = 0;
+        hda_start_transfer();
+        return;
+    }
+
     if (refilling_sound_buffer) {
         refill_sound_buffer();
     }
+
+    tick_executors();
 }
 
 __attribute__((noreturn, optimize("O3")))
@@ -62,7 +72,7 @@ void pmain() {
 
     pit_init(PIT_FREQUENCY);
 
-    sound_file = find_file("song.wav");
+    sound_file = find_file("song.pcm");
     if (!sound_file.data) {
         puts("couldn't find file");
     }
@@ -75,10 +85,19 @@ void pmain() {
     memcpy(hda_data_buffer, sound_file.data, hda_buffer_size);
     asm volatile("wbinvd");
 
-    hda_start_transfer();
+    executor_cb.putchar = putc;
+    executor_cb.clear = clear_console;
+    executor_cb.set_x = console_set_x;
+    executor_cb.set_y = console_set_y;
+
+    add_executor(find_file("lyrics.txt").data);
 
     read_position = hda_buffer_size;
     refilling_sound_buffer = 1;
+    pending_playback = 1;
+
+    clear_console();
+
     irq_set_handler(0, pit_handler);
 
     while (1);

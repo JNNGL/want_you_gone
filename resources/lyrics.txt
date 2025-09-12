@@ -1,0 +1,77 @@
+{c}{x 0}{y 0}
+
+{p 70}
+Forms FORM-29827281-12-2:\
+Notice of Dismissal\
+{s 1400}\
+Well here we are again\{s 700}
+It's always such a pleasure\{s 800}
+Remember when you tried\{p 100}
+to kill me twice?\{s 900}{p 70}
+Oh how we laughed and laughed\{s 650}
+Except I wasn't laughing\{s 550}
+Under the {p 90}circumstances\{p 110}
+I've been shockingly nice\{s 650}{p 110}
+
+{c}{x 0}{y 0}
+
+You want your freedom?\{p 150}
+Take it\{s 950}{p 70}
+That's what I'm counting on\{s 2600}{p 100}
+\
+I used to want {p 150}you dead\{s 100}
+{p 150}but\{s 100}{p 100}
+Now I only want {p 170}you gone\{s 3600}
+
+{c}{x 0}{y 0}
+
+{s 1000}{p 70}
+She was a lot like you\{s 550}
+(Maybe not quite as heavy)\{s 600}{p 90}
+Now little Caroline{s 100} {p 110}is in here too\{s 1400}{p 70}
+One day they woke me up\{s 600}{p 90}
+So I could live forever\{s 500}{p 60}
+It's such a shame the same\{p 110}
+will never happen to you\{s 700}
+
+{c}{x 0}{y 0}
+
+{p 0}
+Severance Package Details:\
+\{p 70}
+You've got your\{p 120}
+short sad\
+life {p 300}left\{s 500}{p 70}
+That's what I'm counting on\{s 2500}{p 120}
+I'll let you get right to it\{s 100}
+Now I only want {p 160}you gone\{s 2900}
+
+{c}{x 0}{y 0}
+
+{s 1500}{p 70}
+Goodbye my only friend\{s 600}{p 100}
+Oh,{s 300}{p 50} did you think I meant you?\{s 500}{p 70}
+That would be funny\{s 300}{p 50}
+if it weren't{p 150} so sad\{s 1400}{p 70}
+Well you have been replaced\{s 400}
+I don't need anyone {p 100}now\{s 550}{p 80}
+When I delete you maybe\
+{p 300}[REDACTED]\{s 550}
+
+{c}{x 0}{y 0}{p 80}
+Go make some new {p 220}disaster\{s 1200}{p 70}
+That's what I'm counting on\{s 2600}{p 100}
+You're someone else's {p 150}problem\{p 130}
+Now I only want you {p 200}gone\{s 1350}{p 120}
+Now I only want you {p 200}gone\{s 1500}{p 120}
+Now I only want{p 200} you
+
+{c}{x 0}{y 0}{p 300}
+gone
+
+{s 4000}{p 30}\
+\
+Made by @jnngl\
+https://github.com/JNNGL/want_you_gone
+
+{e}

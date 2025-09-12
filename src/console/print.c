@@ -2,6 +2,7 @@
 
 #include <real/video.h>
 #include <console/psf.h>
+#include <util/lib.h>
 
 static struct {
     psf1_header_t header;
@@ -13,10 +14,21 @@ static struct {
     int y;
 } text_position;
 
+static struct {
+    int x0;
+    int y0;
+    int x1;
+    int y1;
+} dirty_rect;
+
 void init_console(void* font) {
     load_font(font);
     text_position.x = 0;
     text_position.y = 0;
+    dirty_rect.x0 = 0;
+    dirty_rect.y0 = 0;
+    dirty_rect.x1 = 0;
+    dirty_rect.y1 = 0;
 }
 
 void load_font(void* ptr) {
@@ -37,6 +49,19 @@ void putc(char ch) {
         }
         text_position.x = 0;
         return;
+    }
+
+    if (text_position.x < dirty_rect.x0) {
+        dirty_rect.x0 = text_position.x;
+    }
+    if (text_position.y < dirty_rect.y0) {
+        dirty_rect.y0 = text_position.y;
+    }
+    if (text_position.x + 8 > dirty_rect.x1) {
+        dirty_rect.x1 = text_position.x + 8;
+    }
+    if (text_position.y + console_font.header.char_size > dirty_rect.y1) {
+        dirty_rect.y1 = text_position.y + console_font.header.char_size;
     }
 
     uint8_t* data = get_glyph_pointer(ch);
@@ -67,4 +92,23 @@ void kputs(const char* str) {
 void puts(const char* str) {
     kputs(str);
     putc('\n');
+}
+
+__attribute__((optimize("O3")))
+void clear_console() {
+    if (dirty_rect.x0 == dirty_rect.x1 || dirty_rect.y0 == dirty_rect.y1) {
+        return;
+    }
+
+    for (int y = dirty_rect.y0; y < dirty_rect.y1; y++) {
+        memset(linear_framebuffer + dirty_rect.x0 * 4 + vbe_mode_info.pitch * y, 0, (dirty_rect.x1 - dirty_rect.x0) * 4);
+    }
+}
+
+void console_set_x(uint32_t x) {
+    text_position.x = x;
+}
+
+void console_set_y(uint32_t y) {
+    text_position.y = y;
 }

@@ -61,3 +61,7 @@ void* calloca(size_t n, size_t align) {
     memset(ptr, 0, n);
     return ptr;
 }
+
+uint8_t isdigit(char c) {
+    return c >= '0' && c <= '9';
+}
