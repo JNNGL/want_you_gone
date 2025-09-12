@@ -10,10 +10,28 @@ __asm__(".code16gcc");
 
 __attribute__((optimize("O3")))
 static void memcpy(void* dest, void* src, uint32_t count) {
-    if (!count) return;
-    while (count >= 4) { *(uint32_t*) dest = *(uint32_t*) src; dest += 4; src += 4; count -= 4; }
-    while (count >= 2) { *(uint16_t*) dest = *(uint16_t*) src; dest += 2; src += 2; count -= 2; }
-    while (count >= 1) { *(uint8_t*) dest = *(uint8_t*) src; dest += 1; src += 1; count -= 1; }
+    if (!count) {
+        return;
+    }
+
+    while (count >= 4) {
+        *(uint32_t*) dest = *(uint32_t*) src;
+        dest += 4;
+        src += 4;
+        count -= 4;
+    }
+    while (count >= 2) {
+        *(uint16_t*) dest = *(uint16_t*) src;
+        dest += 2;
+        src += 2;
+        count -= 2;
+    }
+    while (count >= 1) {
+        *(uint8_t*) dest = *(uint8_t*) src;
+        dest += 1;
+        src += 1;
+        count -= 1;
+    }
 }
 
 __attribute__((regparm(2)))
@@ -36,15 +54,15 @@ extern uint8_t disk_buffer[];
 void* data_file_ptr;
 
 void read_disk_sector(uint32_t sector, void* target) {
-    dap_num_sectors = 1;
+    dap_num_sectors = 16;
     dap_buf_offset = (uint32_t)(uintptr_t) &disk_buffer & 0xFFFF;
-    dap_buf_segment = (uint32_t)(uintptr_t) &disk_buffer >> 16;
-    dap_lba_lower = sector * dap_num_sectors;
+    dap_buf_segment = 0;
+    dap_lba_lower = sector;
     dap_lba_upper = 0;
 
     asm("int $0x13" : : "a"(0x4200), "d"(bios_disk), "D"((uint16_t)(uintptr_t) &dap));
 
-    memcpy(target, disk_buffer, 512);
+    memcpy(target, disk_buffer, 8192);
 }
 
 _Noreturn
@@ -56,9 +74,9 @@ void boot_main() {
 
     data_file_ptr = free_memory_ptr;
 
-    for (uint32_t offset = 0; offset < (data_file_size + 511) / 512; offset++) {
+    for (uint32_t offset = 0; offset < (data_file_size + 8191) / 512; offset += 16) {
         read_disk_sector((boot_file_size + 511) / 512 + offset, free_memory_ptr);
-        free_memory_ptr += 512;
+        free_memory_ptr += 8192;
     }
 
     enter_video_mode();

@@ -360,4 +360,4 @@ align 512
 
 global disk_buffer
 disk_buffer:
-    times 512 db 0
+    times 8192 db 0
