@@ -111,7 +111,7 @@ void pmain() {
 
     console_disable();
 
-    init_font(find_file("consolas36.raw").data);
+    init_font(find_file(vbe_mode_info.height < 984 ? "consolas24.raw" : "consolas36.raw").data);
 
     render_background();
 
