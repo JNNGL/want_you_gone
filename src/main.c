@@ -69,6 +69,8 @@ void pit_handler() {
     }
 
     current_time++;
+
+    tick_background();
 }
 
 void set_blink_state(uint8_t state) {
@@ -78,7 +80,7 @@ void set_blink_state(uint8_t state) {
     }
 }
 
-__attribute__((noreturn, optimize("O3")))
+__attribute__((noreturn))
 void pmain() {
     idt_init();
     pic_remap();
@@ -112,14 +114,15 @@ void pmain() {
     init_font(find_file("consolas36.raw").data);
 
     render_background();
-    copy_background();
 
     executor_cb.putchar = draw_char;
     executor_cb.clear = clear_text;
     executor_cb.set_x = set_text_x;
     executor_cb.set_y = set_text_y;
     executor_cb.blink = set_blink_state;
+    executor_cb.reset_dirty = reset_text_dirty_rect;
 
+    set_line_height(5, 4);
     add_executor(find_file("lyrics.txt").data);
 
     irq_set_handler(0, pit_handler);

@@ -65,14 +65,14 @@ That's what I'm counting on\{s 2600}{p 100}
 You're someone else's {p 150}problem\{p 130}
 Now I only want you {p 200}gone\{s 1350}{p 120}
 Now I only want you {p 200}gone\{s 1500}{p 120}
-Now I only want{p 200} you
+Now I only want{p 150} you
 
 {c}{x 73}{y 143}{p 30}
 \\\\\
 {p 300}
 gone
 
-{s 600}{i 0}
+{s 1200}{i 0}
 
 {s 3700}{i 1}
 {s 700}{p 30}

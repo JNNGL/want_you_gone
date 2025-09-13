@@ -54,13 +54,10 @@ void init_font(void* data) {
     font_data.image_height = ((uint32_t*) data)[1];
     font_data.char_width = font_data.image_width / 16;
     font_data.char_height = font_data.image_height / 6;
-    font_data.line_height = font_data.char_height * 5 / 4;
+    font_data.line_height = font_data.char_height;
     font_data.data = data + 8;
 
-    dirty_rect.x0 = 0;
-    dirty_rect.x1 = 0;
-    dirty_rect.y0 = 0;
-    dirty_rect.y1 = 0;
+    reset_text_dirty_rect();
 
     text_position.x = 0;
     text_position.y = 0;
@@ -159,6 +156,10 @@ void draw_char(char c) {
     }
 }
 
+uint32_t get_font_width() {
+    return font_data.char_width;
+}
+
 void set_text_x(uint32_t x) {
     if (cursor_active) {
         cursor_active = 0;
@@ -178,6 +179,17 @@ void set_text_y(uint32_t y) {
 
     y = y * vbe_mode_info.height / 1000;
     text_position.y = y;
+}
+
+void set_line_height(int a, int b) {
+    font_data.line_height = font_data.char_height * a / b;
+}
+
+void reset_text_dirty_rect() {
+    dirty_rect.x0 = 0;
+    dirty_rect.x1 = 0;
+    dirty_rect.y0 = 0;
+    dirty_rect.y1 = 0;
 }
 
 void clear_text() {

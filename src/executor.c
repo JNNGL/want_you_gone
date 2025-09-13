@@ -102,6 +102,11 @@ static void execute_instruction(executor_t* executor) {
             break;
         }
 
+        case 'd': {
+            executor_cb.reset_dirty();
+            break;
+        }
+
         default: {
             break;
         }
